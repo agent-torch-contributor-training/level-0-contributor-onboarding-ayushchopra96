@@ -1,0 +1,33 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: 'Modifying Code Test '
+      id: modifying-code-test
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: 'Modifying Code Test '
+        setup-command: ''
+        command: ls model/plots/ | wc -l
+        input: ''
+        expected-output: '60'
+        comparison-method: contains
+        timeout: 10
+        max-score: 100
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        MODIFYING-CODE-TEST_RESULTS: "${{steps.modifying-code-test.outputs.result}}"
+      with:
+        runners: modifying-code-test
