@@ -13,21 +13,21 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: 'Modifying Code Test '
-      id: modifying-code-test
+    - name: Check num_episodes
+      id: check-num_episodes
       uses: classroom-resources/autograding-io-grader@v1
       with:
-        test-name: 'Modifying Code Test '
+        test-name: Check num_episodes
         setup-command: ''
-        command: ls model/plots/ | wc -l
+        command: cat config.yaml | grep 'num_episodes:'
         input: ''
-        expected-output: '60'
+        expected-output: '7'
         comparison-method: contains
         timeout: 10
         max-score: 100
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
-        MODIFYING-CODE-TEST_RESULTS: "${{steps.modifying-code-test.outputs.result}}"
+        CHECK-NUM_EPISODES_RESULTS: "${{steps.check-num_episodes.outputs.result}}"
       with:
-        runners: modifying-code-test
+        runners: check-num_episodes
